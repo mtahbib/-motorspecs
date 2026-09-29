@@ -38,7 +38,7 @@ export function Gallery({ photos, title, photoOfLabel }: { photos: { url: string
             </button>
           </>
         )}
-        <span className="num absolute bottom-3 end-3 rounded-md bg-ink/75 px-2 py-0.5 text-xs font-medium text-white" aria-live="polite">
+        <span className="num absolute top-3 end-3 rounded-md bg-ink/75 px-2 py-0.5 text-xs font-medium text-white" aria-live="polite">
           {label}
         </span>
       </div>

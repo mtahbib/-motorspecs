@@ -67,7 +67,7 @@ export function VehicleCard({ vehicle, dict, locale }: { vehicle: Card; dict: Di
           {vehicle.is_demo && <DemoBadge label={dict.common.demoBadge} />}
         </div>
         {vehicle.photo_count > 0 && (
-          <span className="absolute bottom-2.5 end-2.5 inline-flex items-center gap-1 rounded-md bg-ink/70 px-1.5 py-0.5 text-xs font-medium text-white">
+          <span className="absolute top-3 end-3 inline-flex items-center gap-1 rounded-md bg-ink/70 px-1.5 py-0.5 text-xs font-medium text-white">
             <Camera className="size-3" aria-hidden /> {vehicle.photo_count}
           </span>
         )}
