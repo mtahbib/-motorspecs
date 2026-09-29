@@ -47,7 +47,11 @@ declare
     split_part(coalesce(new.email, 'Customer'), '@', 1)
   );
   v_locale text := coalesce(new.raw_user_meta_data ->> 'locale', 'en');
+  v_country text := upper(nullif(trim(new.raw_user_meta_data ->> 'country'), ''));
 begin
+  if v_country !~ '^[A-Z]{2}$' then
+    v_country := null;
+  end if;
   if v_locale not in ('en', 'ja', 'ar') then
     v_locale := 'en';
   end if;
@@ -58,8 +62,8 @@ begin
 
   -- Staff accounts are created as customers and promoted by an admin with
   -- public.set_staff_role(); the promotion removes this empty customer row.
-  insert into public.customers (auth_user_id, full_name, email, preferred_language, source)
-  values (new.id, left(v_name, 160), new.email, v_locale, 'website')
+  insert into public.customers (auth_user_id, full_name, email, preferred_language, country_code, source)
+  values (new.id, left(v_name, 160), new.email, v_locale, v_country, 'website')
   on conflict (auth_user_id) do nothing;
 
   return new;

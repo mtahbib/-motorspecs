@@ -1,26 +1,166 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/*
+ * MotorSpecs design tokens
+ * Brand colours come straight from the logo: electric blue #003FFD and ink #121921.
+ */
+@theme {
+  --color-brand: #003ffd;
+  --color-brand-hover: #0033cc;
+  --color-brand-soft: #e8eeff;
+  --color-brand-ink: #0a2a9e;
+
+  --color-ink: #121921;
+  --color-graphite: #0d1219;
+  --color-graphite-2: #161d27;
+  --color-graphite-3: #222b37;
+
+  --color-page: #f3f5f8;
+  --color-surface: #ffffff;
+  --color-line: #e2e6ec;
+  --color-line-strong: #cdd3dc;
+  --color-muted: #5d6673;
+  --color-subtle: #8a93a0;
+
+  --color-ok: #0f8a55;
+  --color-ok-soft: #e4f5ec;
+  --color-warn: #b25e00;
+  --color-warn-soft: #fff2de;
+  --color-danger: #c42b2b;
+  --color-danger-soft: #fdeaea;
+  --color-info-soft: #eaf1fb;
+
+  --font-sans: var(--font-body), var(--font-ja), var(--font-ar), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-latin), var(--font-body), var(--font-ja), var(--font-ar), ui-sans-serif, sans-serif;
+
+  --radius-card: 14px;
+  --shadow-card: 0 1px 2px rgb(18 25 33 / 0.06), 0 4px 16px -8px rgb(18 25 33 / 0.12);
+  --shadow-lift: 0 2px 4px rgb(18 25 33 / 0.06), 0 16px 32px -12px rgb(18 25 33 / 0.22);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--color-page);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "tnum" 0;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--color-brand-soft);
+  }
+  /* Arabic reads better slightly larger with more line height */
+  html[lang="ar"] body {
+    font-size: 1.03rem;
+    line-height: 1.7;
+  }
+  input,
+  select,
+  textarea {
+    font: inherit;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .font-display {
+    font-family: var(--font-display);
+  }
+  html[lang="ar"] .font-display,
+  html[lang="ja"] .font-display {
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+  }
+
+  .num {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .label-caps {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  html[lang="ar"] .label-caps,
+  html[lang="ja"] .label-caps {
+    letter-spacing: 0;
+    font-size: 0.8rem;
+  }
+
+  .input {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--color-line-strong);
+    background: #fff;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.95rem;
+    line-height: 1.35;
+    transition: border-color 120ms, box-shadow 120ms;
+  }
+  .input:focus {
+    outline: none;
+    border-color: var(--color-brand);
+    box-shadow: 0 0 0 3px rgb(0 63 253 / 0.14);
+  }
+  .input:disabled,
+  .input[readonly] {
+    background: var(--color-page);
+    color: var(--color-muted);
+  }
+  .input[aria-invalid="true"] {
+    border-color: var(--color-danger);
+  }
+  select.input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235d6673' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    padding-inline-end: 2.2rem;
+  }
+  [dir="rtl"] select.input {
+    background-position: left 0.8rem center;
+  }
+
+  /* Gauge arc motif from the logo, used as a subtle decorative device */
+  .gauge-rule {
+    height: 6px;
+    background: repeating-linear-gradient(90deg, var(--color-brand) 0 18px, transparent 18px 24px);
+    border-radius: 3px;
+    mask-image: linear-gradient(90deg, #000 40%, transparent);
+  }
+  [dir="rtl"] .gauge-rule {
+    mask-image: linear-gradient(270deg, #000 40%, transparent);
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
