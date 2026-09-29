@@ -1,7 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
-import { updateProfile, type FormState } from "@/app/actions/customer";
+import { useFormAction } from "@/lib/use-form-action";
+import { updateProfile } from "@/app/actions/customer";
 import { Alert, Button, Field } from "@/components/ui";
 import type { MyCustomer } from "@/lib/queries/portal";
 
@@ -26,7 +26,7 @@ export function ProfileForm({
   contactValues: Record<string, string>;
   languages: [string, string][];
 }) {
-  const [state, action, pending] = useActionState<FormState, FormData>(updateProfile, undefined);
+  const { state, pending, onSubmit } = useFormAction(updateProfile);
   const err = (k: string) => state?.fieldErrors?.[k];
   const text = (name: keyof MyCustomer, label: string, opts: { optional?: boolean; type?: string; max?: number; ltr?: boolean; auto?: string } = {}) => (
     <Field label={label} htmlFor={name} optional={opts.optional ? labels.optional : undefined} error={err(name)}>
@@ -46,7 +46,7 @@ export function ProfileForm({
   );
 
   return (
-    <form action={action} className="card grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
+    <form onSubmit={onSubmit} className="card grid gap-5 p-5 sm:grid-cols-2 sm:p-6">
       <input type="hidden" name="locale" value={locale} />
       {text("full_name", labels.fullName, { max: 160, auto: "name" })}
       {text("company_name", labels.company, { optional: true, max: 160, auto: "organization" })}

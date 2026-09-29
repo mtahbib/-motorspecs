@@ -179,16 +179,16 @@ function FilterFields({
       <div className="grid grid-cols-2 gap-2">
         <label className="flex flex-col gap-1 text-sm font-semibold">
           {t.priceMin}
-          <input name="priceMin" type="number" min={0} step={500} inputMode="numeric" defaultValue={filters.priceMin} className="input num font-normal" />
+          <input name="priceMin" type="number" min={0} step="any" inputMode="numeric" defaultValue={filters.priceMin} className="input num font-normal" />
         </label>
         <label className="flex flex-col gap-1 text-sm font-semibold">
           {t.priceMax}
-          <input name="priceMax" type="number" min={0} step={500} inputMode="numeric" defaultValue={filters.priceMax} className="input num font-normal" />
+          <input name="priceMax" type="number" min={0} step="any" inputMode="numeric" defaultValue={filters.priceMax} className="input num font-normal" />
         </label>
       </div>
       <label className="flex flex-col gap-1 text-sm font-semibold">
         {t.mileageMax}
-        <input name="mileageMax" type="number" min={0} step={10000} inputMode="numeric" defaultValue={filters.mileageMax} className="input num font-normal" />
+        <input name="mileageMax" type="number" min={0} step="any" inputMode="numeric" defaultValue={filters.mileageMax} className="input num font-normal" />
       </label>
       {select("transmission", t.transmission, filters.transmission, Object.entries(v.transmissionValues))}
       {select("fuel", t.fuel, filters.fuel, Object.entries(v.fuelValues))}

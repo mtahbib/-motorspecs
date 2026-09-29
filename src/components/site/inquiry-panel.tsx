@@ -2,8 +2,9 @@
 
 import clsx from "clsx";
 import Link from "next/link";
-import { useActionState, useState } from "react";
-import { submitInquiry, type FormState } from "@/app/actions/customer";
+import { useState } from "react";
+import { useFormAction } from "@/lib/use-form-action";
+import { submitInquiry } from "@/app/actions/customer";
 import { Alert, Button, Field } from "@/components/ui";
 
 type Labels = {
@@ -37,7 +38,7 @@ export function InquiryPanel({
   allowOffer: boolean;
 }) {
   const [mode, setMode] = useState<"inquiry" | "offer">("inquiry");
-  const [state, action, pending] = useActionState<FormState, FormData>(submitInquiry, undefined);
+  const { state, pending, onSubmit } = useFormAction(submitInquiry);
 
   if (state?.ok) {
     return (
@@ -67,13 +68,13 @@ export function InquiryPanel({
           ))}
         </div>
       )}
-      <form action={action} className="flex flex-col gap-3">
+      <form onSubmit={onSubmit} className="flex flex-col gap-3">
         <input type="hidden" name="vehicleId" value={vehicleId} />
         <input type="hidden" name="locale" value={locale} />
         <input type="hidden" name="subject" value={defaultSubject} />
         {mode === "offer" && (
           <Field label={labels.offerAmount} htmlFor="offerAmount" error={state?.fieldErrors?.offerAmount}>
-            <input id="offerAmount" name="offerAmount" type="number" min={1} step={50} required inputMode="numeric" dir="ltr" className="input num" />
+            <input id="offerAmount" name="offerAmount" type="number" min={1} step="any" required inputMode="numeric" dir="ltr" className="input num" />
           </Field>
         )}
         <Field label={labels.destinationPort} htmlFor="destinationPort" optional={labels.optional}>

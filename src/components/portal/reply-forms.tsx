@@ -1,19 +1,20 @@
 "use client";
 
 import { Send } from "lucide-react";
-import { useActionState, useRef } from "react";
+import { useRef } from "react";
+import { useFormAction } from "@/lib/use-form-action";
 import { makeCounterOffer, sendCustomerMessage, type FormState } from "@/app/actions/customer";
 import { Alert, Button } from "@/components/ui";
 
 export function CustomerReplyForm({ inquiryId, locale, labels }: { inquiryId: string; locale: string; labels: { placeholder: string; send: string } }) {
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, action, pending] = useActionState<FormState, FormData>(async (prev, fd) => {
+  const { state, pending, onSubmit } = useFormAction<FormState>(async (prev, fd) => {
     const result = await sendCustomerMessage(prev, fd);
     if (result?.ok) formRef.current?.reset();
     return result;
-  }, undefined);
+  });
   return (
-    <form ref={formRef} action={action} className="flex flex-col gap-2">
+    <form ref={formRef} onSubmit={onSubmit} className="flex flex-col gap-2">
       <input type="hidden" name="inquiryId" value={inquiryId} />
       <input type="hidden" name="locale" value={locale} />
       <div className="flex gap-2">
@@ -29,14 +30,14 @@ export function CustomerReplyForm({ inquiryId, locale, labels }: { inquiryId: st
 }
 
 export function CounterOfferForm({ inquiryId, locale, labels }: { inquiryId: string; locale: string; labels: { amount: string; submit: string } }) {
-  const [state, action, pending] = useActionState<FormState, FormData>(makeCounterOffer, undefined);
+  const { state, pending, onSubmit } = useFormAction(makeCounterOffer);
   return (
-    <form action={action} className="flex flex-col gap-2 sm:flex-row sm:items-end">
+    <form onSubmit={onSubmit} className="flex flex-col gap-2 sm:flex-row sm:items-end">
       <input type="hidden" name="inquiryId" value={inquiryId} />
       <input type="hidden" name="locale" value={locale} />
       <label className="flex flex-1 flex-col gap-1 text-sm font-semibold">
         {labels.amount}
-        <input name="amount" type="number" min={1} step={50} required inputMode="numeric" dir="ltr" className="input num" />
+        <input name="amount" type="number" min={1} step="any" required inputMode="numeric" dir="ltr" className="input num" />
       </label>
       <Button type="submit" variant="secondary" disabled={pending}>{labels.submit}</Button>
       {state?.error && <Alert tone="danger">{state.error}</Alert>}
